@@ -7,7 +7,10 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - What did the game look like the first time you ran it?
 - List at least two concrete bugs you noticed at the start  
   (for example: "the secret number kept changing" or "the hints were backwards").
-
+  - Issue 1: When inputting a number lower than SECRET NUMBER, it said to go lower; when inputting a number higher than SECRET NUMBER, it said to go higher.
+    - Fix: Line 37 -> ">" to "<"
+  - Issue 2: After inputting a number and pressing "Submit Guess", the History list does not show the number until after pressing "Submit Guess" on a subsequent number.
+  - Issue 3: The "New Game" button generates a new SECRET number and resets the number of attempts to 0, does not clear the History list
 ---
 
 ## 2. How did you use AI as a teammate?
