@@ -29,6 +29,7 @@ def parse_guess(raw: str):
     return True, value, None
 
 
+# Fixed the logic to correctly return "Go LOWER" or "Go HIGHER" for guesses.
 def check_guess(guess, secret):
     if guess == secret:
         return "Win", "🎉 Correct!"
@@ -114,10 +115,13 @@ st.info(
     f"Attempts left: {attempt_limit - st.session_state.attempts}"
 )
 
+# CHANGE: Replaced individual text_input + submit button with a Streamlit form
+# This groups the input and submit action together and prevents unnecessary reruns.
 with st.form("guess_form", clear_on_submit=True):
     raw_guess = st.text_input("Enter your guess:")
     submit = st.form_submit_button("Submit Guess 🚀")
 
+# CHANGE: Reduced columns from 3 to 2 because submit is now inside the form
 col1, col2 = st.columns(2)
 with col1:
     new_game = st.button("New Game 🔁")
@@ -129,6 +133,7 @@ if new_game:
     st.session_state.score = 0
     st.session_state.history = []
     st.session_state.status = "playing"
+    # CHANGE: Secret now regenerated using the selected difficulty range instead of the fixed 1–100 range
     st.session_state.secret = random.randint(low, high)
     st.success("New game started.")
     st.rerun()
@@ -151,6 +156,8 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
+        # CHANGE: Removed alternating string/int secret logic.
+        # Now always compares guess directly to the integer secret value.
         outcome, message = check_guess(guess_int, st.session_state.secret)
 
         if show_hint:
@@ -178,6 +185,7 @@ if submit:
                     f"Score: {st.session_state.score}"
                 )
 
+# CHANGE: Moved Developer Debug Info to the bottom so it reflects updated state after guesses
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
     st.write("Attempts:", st.session_state.attempts)

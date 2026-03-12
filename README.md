@@ -26,12 +26,15 @@ It wrote the code, ran away, and now the game is unplayable.
 ## 📝 Document Your Experience
 
 - [ ] Describe the game's purpose.
+The purpose of the game is to guess a randomly generated secret number within a limited number of attempts. The player enters guesses through a Streamlit interface and receives feedback indicating whether the guess is too high, too low, or correct. The game tracks the number of attempts, the player’s score, and the history of guesses. Difficulty settings adjust the range of possible numbers and the number of attempts allowed.
 - [ ] Detail which bugs you found.
+Several issues were discovered when running the original application. First, the hint logic was reversed: when a guess was higher than the secret number, the game sometimes suggested going higher instead of lower. Second, the guess history list did not immediately update after submitting a guess and instead appeared one guess behind. Third, starting a new game did not properly reset all game state variables, such as the history list and score. These issues caused confusing gameplay behavior and inconsistent state tracking.
 - [ ] Explain what fixes you applied.
+To fix these issues, I corrected the higher/lower hint logic so that the messages matched the actual comparison with the secret number. I also adjusted the input handling by grouping the guess input and submit button inside a Streamlit form so guesses would register correctly without delayed updates. Additionally, I modified the "New Game" logic to reset all relevant session state variables, including attempts, score, history, and game status. Finally, I ensured the secret number was always compared as an integer instead of sometimes being converted to a string, which previously caused inconsistent comparisons.
 
 ## 📸 Demo
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
+- ![Winning Game Screenshot](images/working_game.png)
 
 ## 🚀 Stretch Features
 
