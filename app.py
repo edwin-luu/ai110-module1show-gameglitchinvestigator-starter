@@ -109,6 +109,11 @@ if "last_hint" not in st.session_state:
 
 st.subheader("Make a guess")
 
+st.info(
+    f"Guess a number between 1 and 100. "
+    f"Attempts left: {attempt_limit - st.session_state.attempts}"
+)
+
 with st.form("guess_form", clear_on_submit=True):
     raw_guess = st.text_input("Enter your guess:")
     submit = st.form_submit_button("Submit Guess 🚀")
@@ -125,7 +130,6 @@ if new_game:
     st.session_state.history = []
     st.session_state.status = "playing"
     st.session_state.secret = random.randint(low, high)
-    st.session_state.last_hint = None
     st.success("New game started.")
     st.rerun()
 
@@ -136,8 +140,6 @@ if st.session_state.status != "playing":
         st.error("Game over. Start a new game to try again.")
     st.stop()
 
-feedback = st.container()
-
 if submit:
     st.session_state.attempts += 1
 
@@ -145,12 +147,14 @@ if submit:
 
     if not ok:
         st.session_state.history.append(raw_guess)
-        st.session_state.last_hint = ("error", err)
+        st.error(err)
     else:
         st.session_state.history.append(guess_int)
 
         outcome, message = check_guess(guess_int, st.session_state.secret)
-        st.session_state.last_hint = ("warning", message)
+
+        if show_hint:
+            st.warning(message)
 
         st.session_state.score = update_score(
             current_score=st.session_state.score,
@@ -161,34 +165,18 @@ if submit:
         if outcome == "Win":
             st.balloons()
             st.session_state.status = "won"
-            with feedback:
-                st.success(
-                    f"You won! The secret was {st.session_state.secret}. "
-                    f"Final score: {st.session_state.score}"
-                )
+            st.success(
+                f"You won! The secret was {st.session_state.secret}. "
+                f"Final score: {st.session_state.score}"
+            )
         else:
             if st.session_state.attempts >= attempt_limit:
                 st.session_state.status = "lost"
-                with feedback:
-                    st.error(
-                        f"Out of attempts! "
-                        f"The secret was {st.session_state.secret}. "
-                        f"Score: {st.session_state.score}"
-                    )
-
-with feedback:
-    st.info(
-        f"Guess a number between {low} and {high}. "
-        f"Attempts left: {attempt_limit - st.session_state.attempts}"
-    )
-
-if st.session_state.last_hint:
-    hint_type, hint_msg = st.session_state.last_hint
-    with feedback:
-        if hint_type == "error":
-            st.error(hint_msg)
-        elif hint_type == "warning" and show_hint:
-            st.warning(hint_msg)
+                st.error(
+                    f"Out of attempts! "
+                    f"The secret was {st.session_state.secret}. "
+                    f"Score: {st.session_state.score}"
+                )
 
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
