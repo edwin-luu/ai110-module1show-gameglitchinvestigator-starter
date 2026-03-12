@@ -34,7 +34,7 @@ To fix these issues, I corrected the higher/lower hint logic so that the message
 
 ## 📸 Demo
 
-- ![Winning Game Screenshot](images/working_game.png)
+- ![Winning Game Screenshot](images/working_game.jpg)
 
 ## 🚀 Stretch Features
 
